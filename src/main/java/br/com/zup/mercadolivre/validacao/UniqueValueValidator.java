@@ -1,6 +1,5 @@
 package br.com.zup.mercadolivre.validacao;
 
-import br.com.zup.mercadolivre.usuario.UsuarioRepository;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
@@ -8,7 +7,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class UniqueValueValidator implements ConstraintValidator<UniqueValue, Object> {
