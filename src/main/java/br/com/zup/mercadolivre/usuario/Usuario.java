@@ -3,10 +3,7 @@ package br.com.zup.mercadolivre.usuario;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,7 +16,7 @@ public class Usuario {
     private String login;
     @NotBlank @Size(min=6)
     private String senha;
-    @CreationTimestamp @NotNull
+    @CreationTimestamp @NotNull @PastOrPresent
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
     public Usuario(@NotBlank @Email String login, @NotBlank @Size(min=6) String senha) {
