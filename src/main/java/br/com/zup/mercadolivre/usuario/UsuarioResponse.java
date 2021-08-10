@@ -4,16 +4,16 @@ import java.time.LocalDateTime;
 
 public class UsuarioResponse {
 
-    private String login;
+    private String email;
     private LocalDateTime dataCadastro;
 
     public UsuarioResponse(Usuario usuario) {
-        this.login = usuario.getLogin();
+        this.email = usuario.getEmail();
         this.dataCadastro = usuario.getDataCadastro();
     }
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
     public LocalDateTime getDataCadastro() {

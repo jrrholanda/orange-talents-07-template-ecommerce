@@ -13,14 +13,14 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank @Email @Column(unique = true)
-    private String login;
+    private String email;
     @NotBlank @Size(min=6)
     private String senha;
     @CreationTimestamp @NotNull @PastOrPresent
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
-    public Usuario(@NotBlank @Email String login, @NotBlank @Size(min=6) String senha) {
-        this.login = login;
+    public Usuario(@NotBlank @Email String email, @NotBlank @Size(min=6) String senha) {
+        this.email = email;
         this.senha = senha;
     }
 
@@ -28,8 +28,8 @@ public class Usuario {
         return id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
     public String getSenha() {

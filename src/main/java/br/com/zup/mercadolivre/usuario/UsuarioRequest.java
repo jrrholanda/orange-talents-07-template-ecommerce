@@ -11,7 +11,7 @@ public class UsuarioRequest {
 
     @NotBlank
     @Email
-    @UniqueValue(domainClass = Usuario.class, fieldName = "login")
+    @UniqueValue(domainClass = Usuario.class, fieldName = "email")
     private String login;
     @NotBlank @Size(min=6)
     private String senha;

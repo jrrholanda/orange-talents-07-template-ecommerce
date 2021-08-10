@@ -1,5 +1,6 @@
 package br.com.zup.mercadolivre.categoria;
 
+import br.com.zup.mercadolivre.validacao.ExistsId;
 import br.com.zup.mercadolivre.validacao.UniqueValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -11,6 +12,7 @@ public class CategoriaRequest {
     @NotBlank @UniqueValue(domainClass = Categoria.class, fieldName = "nome")
     private String nome;
 
+    @ExistsId(domainClass = Categoria.class, fieldName = "id")
     private Long idCategoria;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
@@ -26,7 +28,9 @@ public class CategoriaRequest {
         Categoria categoria = new Categoria(this.nome);
         if(this.idCategoria != null){
             Optional<Categoria> categoriaMae = categoriaRepository.findById(this.idCategoria);
-            categoria.setCategoria(categoriaMae.get());
+            if(categoriaMae.isPresent()){
+                categoria.setCategoria(categoriaMae.get());
+            }
         }
         return categoria;
     }
