@@ -29,7 +29,7 @@ public class TokenManager {
         final Date expiration = new Date(now.getTime() + this.expirationInMillis);
 
         return Jwts.builder()
-                .setIssuer("Desafio jornada dev eficiente mercado livre")
+                .setIssuer("Desafio mercado livre")
                 .setSubject(user.getUsername())
                 .setIssuedAt(now)
                 .setExpiration(expiration)

@@ -1,45 +1,30 @@
 package br.com.zup.mercadolivre.security;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import br.com.zup.mercadolivre.usuario.Usuario;
+import br.com.zup.mercadolivre.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 @Service
 public class UsersService implements UserDetailsService {
 
-    @PersistenceContext
-    private EntityManager manager;
-    @Value("${security.username-query}")
-    private String query;
     @Autowired
     private UserDetailsMapper userDetailsMapper;
 
+    @Autowired
+    private UsuarioRepository userRepository;
+
     @Override
-    public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
-
-        List<?> objects = manager.createQuery(query)
-                .setParameter("username", username).getResultList();
-        Assert.isTrue(objects.size() <= 1,
-                "[BUG] mais de um autenticável tem o mesmo username. "
-                        + username);
-
-        if (objects.isEmpty()) {
-            throw new UsernameNotFoundException(
-                    "Não foi possível encontrar usuário com email: "
-                            + username);
-        }
-
-        return userDetailsMapper.map(objects.get(0));
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException{
+        Optional<Usuario> user = userRepository.findByEmail(userName);
+        user.orElseThrow(() -> new UsernameNotFoundException(userName + "not found."));
+        return userDetailsMapper.map(user.get());
     }
 
 }

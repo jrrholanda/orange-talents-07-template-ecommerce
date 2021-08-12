@@ -19,6 +19,10 @@ public class Usuario {
     @CreationTimestamp @NotNull @PastOrPresent
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
+    @Deprecated
+    public Usuario() {
+    }
+
     public Usuario(@NotBlank @Email String email, @NotBlank @Size(min=6) String senha) {
         this.email = email;
         this.senha = senha;

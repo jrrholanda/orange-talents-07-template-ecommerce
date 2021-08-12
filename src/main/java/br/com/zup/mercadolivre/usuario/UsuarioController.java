@@ -26,7 +26,6 @@ public class UsuarioController {
         Usuario usuario = usuarioRequest.toModel();
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
         String senhaEncoder = encoder.encode(usuario.getSenha());
         usuario.setSenha(senhaEncoder);
 
