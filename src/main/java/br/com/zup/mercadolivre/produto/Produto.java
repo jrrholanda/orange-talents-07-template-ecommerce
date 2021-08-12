@@ -27,7 +27,7 @@ public class Produto {
     private BigDecimal valor;
     @NotNull @Positive
     private Integer quantidade;
-    @NotNull @OneToMany
+    @NotNull @OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
     private Set<CaracteristicaProduto> caracteristicas = new HashSet<>();
     @NotBlank @Length(max=1000)
     private String descrição;
