@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Usuario {
@@ -46,5 +47,18 @@ public class Usuario {
 
     public LocalDateTime getDataCadastro() {
         return dataCadastro;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Usuario)) return false;
+        Usuario usuario = (Usuario) o;
+        return getId().equals(usuario.getId()) && getEmail().equals(usuario.getEmail());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getEmail());
     }
 }

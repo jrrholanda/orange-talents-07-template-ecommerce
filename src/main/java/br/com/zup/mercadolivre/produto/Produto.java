@@ -1,6 +1,7 @@
 package br.com.zup.mercadolivre.produto;
 
 import br.com.zup.mercadolivre.categoria.Categoria;
+import br.com.zup.mercadolivre.usuario.Usuario;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.Assert;
@@ -36,20 +37,25 @@ public class Produto {
     private Categoria categoria;
     @CreationTimestamp @NotNull
     private LocalDateTime instanteCadastro = LocalDateTime.now();
+    @ManyToOne
+    private Usuario dono;
 
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+    private Set<ImagemProduto> imagens = new HashSet<>();
 
     @Deprecated
     public Produto() {
     }
 
     public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal valor, @NotNull @Positive Integer quantidade,
-                   @NotBlank @Length(max=1000) String descrição, @NotNull @Valid Categoria categoria,
+                   @NotBlank @Length(max=1000) String descrição, @NotNull @Valid Categoria categoria, @NotNull Usuario dono,
                    @Size(min = 3) @Valid Collection<NovaCaracteristicaRequest> caracteristicas) {
         this.nome = nome;
         this.valor = valor;
         this.quantidade = quantidade;
         this.descrição = descrição;
         this.categoria = categoria;
+        this.dono = dono;
 
         this.caracteristicas.addAll(caracteristicas.stream()
                 .map(caracteristica -> caracteristica.toModel(this))
@@ -76,7 +82,7 @@ public class Produto {
         return quantidade;
     }
 
-    public Set<CaracteristicaProduto> getCaracterísticas() {
+    public Set<CaracteristicaProduto> getCaracteristicas() {
         return caracteristicas;
     }
 
@@ -90,6 +96,10 @@ public class Produto {
 
     public LocalDateTime getInstanteCadastro() {
         return instanteCadastro;
+    }
+
+    public Usuario getDono() {
+        return dono;
     }
 
     @Override
@@ -115,5 +125,13 @@ public class Produto {
         } else if (!nome.equals(other.nome))
             return false;
         return true;
+    }
+
+    public void associaImagens(Set<String> links) {
+        Set<ImagemProduto> imagens = links.stream()
+                .map(link -> new ImagemProduto(this, link))
+                .collect(Collectors.toSet());
+
+        this.imagens.addAll(imagens);
     }
 }

@@ -1,6 +1,7 @@
 package br.com.zup.mercadolivre.produto;
 
 import br.com.zup.mercadolivre.categoria.Categoria;
+import br.com.zup.mercadolivre.usuario.Usuario;
 import br.com.zup.mercadolivre.validacao.ExistsId;
 import br.com.zup.mercadolivre.validacao.UniqueValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -47,11 +48,11 @@ public class ProdutoRequest {
         this.caracteristicas = caracteristicas;
     }
 
-    public Produto toModel(EntityManager manager) {
+    public Produto toModel(EntityManager manager, Usuario dono) {
         Categoria categoria = manager.find(Categoria.class, this.idCategoria);
 
         return new Produto(this.nome, this.valor, this.quantidade, this.descricao, categoria,
-                this.caracteristicas);
+               dono, this.caracteristicas);
     }
 
 
