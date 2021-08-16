@@ -1,10 +1,12 @@
 package br.com.zup.mercadolivre.produto;
 
+import br.com.zup.mercadolivre.security.UsuarioLogado;
 import br.com.zup.mercadolivre.usuario.Usuario;
 import br.com.zup.mercadolivre.usuario.VerificaUsuarioLogado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,9 +24,6 @@ import java.util.Set;
 public class ProdutoController {
 
     @Autowired
-    private VerificaUsuarioLogado verificaUsuarioLogado;
-
-    @Autowired
     private ProdutoRepository produtoRepository;
 
     @PersistenceContext
@@ -40,8 +39,11 @@ public class ProdutoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<ProdutoResponse> post (@RequestBody @Valid ProdutoRequest produtoRequest, HttpServletRequest request) {
-        Usuario dono = verificaUsuarioLogado.getUsuarioRequest(request);
+    public ResponseEntity<ProdutoResponse> post (@RequestBody @Valid ProdutoRequest produtoRequest, @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+
+        Usuario dono = usuarioLogado.get();
+
+        System.out.println(dono);
 
         Produto produto = produtoRequest.toModel(manager, dono);
         produtoRepository.save(produto);
@@ -54,11 +56,11 @@ public class ProdutoController {
     }
 
     @PostMapping("/{id}/imagem")
-    public String cadastraImagem(@PathVariable Long idProduto, HttpServletRequest request, @Valid NovasImagensRequest imagensRequest){
-        Usuario usuarioLogado = verificaUsuarioLogado.getUsuarioRequest(request);
+    public String cadastraImagem(@PathVariable("id") Long idProduto, @Valid NovasImagensRequest imagensRequest, @AuthenticationPrincipal UsuarioLogado usuarioLogado){
+        Usuario usuarioAtual = usuarioLogado.get();
         Optional<Produto> produto = produtoRepository.findById(idProduto);
 
-        if(!produto.get().getDono().equals(usuarioLogado) ){
+        if(!produto.get().getDono().equals(usuarioAtual) ){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
