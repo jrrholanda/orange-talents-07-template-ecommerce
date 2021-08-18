@@ -1,6 +1,8 @@
 package br.com.zup.mercadolivre.pergunta;
 
-public class PerguntaResponse {
+import java.util.Comparator;
+
+public class PerguntaResponse implements Comparable<PerguntaResponse>{
 
     private String titulo;
 
@@ -10,5 +12,10 @@ public class PerguntaResponse {
 
     public String getTitulo() {
         return titulo;
+    }
+
+    @Override
+    public int compareTo(PerguntaResponse o) {
+        return Comparator.comparing(PerguntaResponse::getTitulo).reversed().compare(this, o);
     }
 }

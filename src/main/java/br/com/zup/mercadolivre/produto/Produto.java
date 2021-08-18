@@ -1,6 +1,8 @@
 package br.com.zup.mercadolivre.produto;
 
 import br.com.zup.mercadolivre.categoria.Categoria;
+import br.com.zup.mercadolivre.opiniao.Opiniao;
+import br.com.zup.mercadolivre.pergunta.Pergunta;
 import br.com.zup.mercadolivre.usuario.Usuario;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
@@ -11,9 +13,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Entity
@@ -31,7 +32,7 @@ public class Produto {
     @NotNull @OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
     private Set<CaracteristicaProduto> caracteristicas = new HashSet<>();
     @NotBlank @Length(max=1000)
-    private String descrição;
+    private String descricao;
     @NotNull @Valid
     @ManyToOne
     private Categoria categoria;
@@ -43,17 +44,24 @@ public class Produto {
     @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
     private Set<ImagemProduto> imagens = new HashSet<>();
 
+    @OneToMany(mappedBy = "produto")
+    @OrderBy("titulo asc")
+    private SortedSet<Pergunta> perguntas = new TreeSet<>();
+
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+    private Set<Opiniao> opinioes = new HashSet<>();
+
     @Deprecated
     public Produto() {
     }
 
     public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal valor, @NotNull @Positive Integer quantidade,
-                   @NotBlank @Length(max=1000) String descrição, @NotNull @Valid Categoria categoria, @NotNull Usuario dono,
+                   @NotBlank @Length(max=1000) String descricao, @NotNull @Valid Categoria categoria, @NotNull Usuario dono,
                    @Size(min = 3) @Valid Collection<NovaCaracteristicaRequest> caracteristicas) {
         this.nome = nome;
         this.valor = valor;
         this.quantidade = quantidade;
-        this.descrição = descrição;
+        this.descricao = descricao;
         this.categoria = categoria;
         this.dono = dono;
 
@@ -86,8 +94,8 @@ public class Produto {
         return caracteristicas;
     }
 
-    public String getDescrição() {
-        return descrição;
+    public String getDescricao() {
+        return descricao;
     }
 
     public Categoria getCategoria() {
@@ -134,4 +142,25 @@ public class Produto {
 
         this.imagens.addAll(imagens);
     }
+
+    public <T> Set<T> mapeiaImagens(Function<ImagemProduto, T> funcaoMapeadora) {
+        return this.imagens.stream().map(funcaoMapeadora)
+                .collect(Collectors.toSet());
+    }
+
+    public <T> Set<T> mapeiaCaracteristicas(Function<CaracteristicaProduto, T> funcaoMapeadora) {
+        return this.caracteristicas.stream().map(funcaoMapeadora)
+                .collect(Collectors.toSet());
+    }
+
+    public <T extends Comparable<T>> SortedSet<T> mapeiaPerguntas(Function<Pergunta, T> funcaoMapeadora) {
+        return this.perguntas.stream().map(funcaoMapeadora)
+                .collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    public <T> Set<T> mapeiaOpinioes(Function<Opiniao, T> funcaoMapeadora) {
+        return this.opinioes.stream().map(funcaoMapeadora)
+                .collect(Collectors.toCollection(TreeSet::new));
+    }
+
 }

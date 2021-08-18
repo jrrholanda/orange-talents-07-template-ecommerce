@@ -56,7 +56,7 @@ public class ProdutoController {
     }
 
     @PostMapping("/{id}/imagem")
-    public String cadastraImagem(@PathVariable("id") Long idProduto, @Valid NovasImagensRequest imagensRequest, @AuthenticationPrincipal UsuarioLogado usuarioLogado){
+    public ResponseEntity<ImagemProdutoResponse> cadastraImagem(@PathVariable("id") Long idProduto, @Valid NovasImagensRequest imagensRequest, @AuthenticationPrincipal UsuarioLogado usuarioLogado){
         Usuario usuarioAtual = usuarioLogado.get();
         Optional<Produto> produto = produtoRepository.findById(idProduto);
 
@@ -68,6 +68,10 @@ public class ProdutoController {
         produto.get().associaImagens(links);
         produtoRepository.save(produto.get());
 
-        return "Imagem cadastrada";
+        try {
+            return ResponseEntity.ok().body(new ImagemProdutoResponse(produto.get()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
