@@ -43,8 +43,6 @@ public class ProdutoController {
 
         Usuario dono = usuarioLogado.get();
 
-        System.out.println(dono);
-
         Produto produto = produtoRequest.toModel(manager, dono);
         produtoRepository.save(produto);
 

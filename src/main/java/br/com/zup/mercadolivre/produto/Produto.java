@@ -28,7 +28,7 @@ public class Produto {
     @NotNull @Positive
     private BigDecimal valor;
     @NotNull @Positive
-    private Integer quantidade;
+    private int quantidade;
     @NotNull @OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
     private Set<CaracteristicaProduto> caracteristicas = new HashSet<>();
     @NotBlank @Length(max=1000)
@@ -55,7 +55,7 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal valor, @NotNull @Positive Integer quantidade,
+    public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal valor, @NotNull @Positive int quantidade,
                    @NotBlank @Length(max=1000) String descricao, @NotNull @Valid Categoria categoria, @NotNull Usuario dono,
                    @Size(min = 3) @Valid Collection<NovaCaracteristicaRequest> caracteristicas) {
         this.nome = nome;
@@ -86,8 +86,12 @@ public class Produto {
         return valor;
     }
 
-    public Integer getQuantidade() {
+    public int getQuantidade() {
         return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
     }
 
     public Set<CaracteristicaProduto> getCaracteristicas() {
@@ -161,6 +165,16 @@ public class Produto {
     public <T> Set<T> mapeiaOpinioes(Function<Opiniao, T> funcaoMapeadora) {
         return this.opinioes.stream().map(funcaoMapeadora)
                 .collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    public boolean atualizaEstoque(@Positive int quantidade){
+        Assert.isTrue(quantidade > 0, "A quantidade informada deve ser maior que zero ");
+
+        if(quantidade <= this.quantidade) {
+            this.quantidade-=quantidade;
+            return true;
+        }
+        return false;
     }
 
 }

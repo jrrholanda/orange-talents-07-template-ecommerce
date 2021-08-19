@@ -20,7 +20,7 @@ public class ProdutoRequest {
     @NotNull @Positive
     private BigDecimal valor;
     @NotNull @Positive
-    private Integer quantidade;
+    private int quantidade;
     @NotBlank @Length(max=1000)
     private String descricao;
     @NotNull @ExistsId(domainClass = Categoria.class, fieldName = "id")
@@ -29,7 +29,7 @@ public class ProdutoRequest {
     private List<NovaCaracteristicaRequest> caracteristicas = new ArrayList<>();
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public ProdutoRequest(@NotBlank String nome, @NotNull @Positive BigDecimal valor, @NotNull @Positive Integer quantidade,
+    public ProdutoRequest(@NotBlank String nome, @NotNull @Positive BigDecimal valor, @NotNull @Positive int quantidade,
                           @NotBlank String descricao, @NotNull Long idCategoria,
                           @Size(min = 3) @Valid List<NovaCaracteristicaRequest> caracteristicas) {
         this.nome = nome;
