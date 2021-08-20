@@ -1,11 +1,12 @@
-package br.com.zup.mercadolivre.pergunta;
+package br.com.zup.mercadolivre.email;
 
+import br.com.zup.mercadolivre.email.Mailer;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
 @Primary
-public class FakeMailer implements Mailer{
+public class FakeMailer implements Mailer {
 
     @Override
     public void send(String body, String subject, String nameFrom, String from, String to) {

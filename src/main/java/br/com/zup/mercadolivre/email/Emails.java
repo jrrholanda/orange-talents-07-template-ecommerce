@@ -1,5 +1,7 @@
-package br.com.zup.mercadolivre.pergunta;
+package br.com.zup.mercadolivre.email;
 
+import br.com.zup.mercadolivre.compra.Compra;
+import br.com.zup.mercadolivre.pergunta.Pergunta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +19,8 @@ public class Emails {
     }
 
 
+    public void novaCompra(@NotNull @Valid Compra compra) {
+        mailer.send("<html>...</html>", "Nova compra...",compra.getComprador().getEmail(), "novacompra@mercadolivre.com",compra.getDonoProduto().getEmail());
+    }
 }
 

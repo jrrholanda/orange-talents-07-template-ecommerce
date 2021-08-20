@@ -1,4 +1,4 @@
-package br.com.zup.mercadolivre.pergunta;
+package br.com.zup.mercadolivre.email;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

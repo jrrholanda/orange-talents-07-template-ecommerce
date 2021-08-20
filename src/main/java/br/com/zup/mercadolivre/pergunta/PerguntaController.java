@@ -1,6 +1,6 @@
 package br.com.zup.mercadolivre.pergunta;
 
-import br.com.zup.mercadolivre.opiniao.OpiniaoResponse;
+import br.com.zup.mercadolivre.email.Emails;
 import br.com.zup.mercadolivre.produto.Produto;
 import br.com.zup.mercadolivre.produto.ProdutoRepository;
 import br.com.zup.mercadolivre.security.UsuarioLogado;

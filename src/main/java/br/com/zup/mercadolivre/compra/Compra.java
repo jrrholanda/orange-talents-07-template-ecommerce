@@ -53,6 +53,8 @@ public class Compra {
         return comprador;
     }
 
+    public Usuario getDonoProduto(){ return produto.getDono();}
+
     public GatewayPagamento getGatewayPagamento() {
         return gatewayPagamento;
     }

@@ -1,5 +1,6 @@
 package br.com.zup.mercadolivre.compra;
 
+import br.com.zup.mercadolivre.email.Emails;
 import br.com.zup.mercadolivre.produto.Produto;
 import br.com.zup.mercadolivre.produto.ProdutoRepository;
 import br.com.zup.mercadolivre.security.UsuarioLogado;
@@ -25,6 +26,9 @@ public class FinalizaCompraController {
     @Autowired
     CompraRepository compraRepository;
 
+    @Autowired
+    private Emails emails;
+
     @PostMapping
     @Transactional
     public ResponseEntity<?> finalizaCompra(@RequestBody @Valid NovaCompraRequest request, @AuthenticationPrincipal UsuarioLogado usuarioLogado,
@@ -38,6 +42,7 @@ public class FinalizaCompraController {
 
             Compra compra = request.toModel(produto, comprador);
             compraRepository.save(compra);
+            emails.novaCompra(compra);
 
             var response = new HashMap<>();
             response.put("Url do pagamento", compra.geraUrlGateway(uriComponentsBuilder));
@@ -45,11 +50,11 @@ public class FinalizaCompraController {
         }
 
 
-        BindException problemaComEstoque = new BindException(request,
+        BindException semEstoque = new BindException(request,
                 "novaCompraRequest");
-        problemaComEstoque.reject(null,
+        semEstoque.reject(null,
                 "Não há estoque para o produto solicitado");
 
-        throw problemaComEstoque;
+        throw semEstoque;
     }
 }
