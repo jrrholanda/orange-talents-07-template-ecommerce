@@ -99,10 +99,8 @@ public class Compra {
     public void adicionaPagamento(@Valid GatewayPagamentoRequest request) {
         Pagamento novaTransacao = request.toPagamento(this);
 
-        //1
         Assert.state(!this.tentativasPagamento.contains(novaTransacao),
                 "Já existe um pagamento semelhante em processamento" + novaTransacao);
-        //1
         Assert.state(transacoesConcluidasComSucesso().isEmpty(),"Compra já concluída");
 
         this.tentativasPagamento.add(novaTransacao);
